@@ -110,10 +110,30 @@ button { color: inherit; }
 .pattern-box small { display: block; font-size: 9px; font-weight: 800; letter-spacing: .16em; margin-bottom: 10px; }
 .pattern-box code { font-family: 'DM Sans', sans-serif; font-weight: 700; color: var(--green); }
 .pattern-box em { display: block; margin-top: 15px; font-family: 'Fraunces', serif; }
+.lesson-breakdown { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.lesson-breakdown > div { padding: 20px; border: 1px solid var(--line); background: color-mix(in srgb, var(--mint) 24%, var(--card)); }
+.lesson-breakdown small { display: block; margin-bottom: 10px; color: var(--green); font-size: 10px; font-weight: 800; letter-spacing: .14em; }
+.lesson-breakdown p { margin: 0; font-size: 14px; }
+.lesson-breakdown em { display: block; margin-top: 12px; font-family: 'Fraunces', serif; line-height: 1.5; }
+.lesson-steps { grid-column: 1 / -1; display: grid; grid-template-columns: 1.35fr .65fr; border: 1px solid var(--line); }
+.lesson-steps > div { padding: 22px; }
+.lesson-steps > div + div { border-left: 1px solid var(--line); }
+.lesson-steps small { display: block; margin-bottom: 12px; color: var(--coral); font-size: 9px; font-weight: 800; letter-spacing: .16em; }
+.lesson-steps ol { margin: 0; padding-left: 22px; color: var(--muted); }
+.lesson-steps li { padding-left: 5px; line-height: 1.6; }
+.lesson-steps li + li { margin-top: 7px; }
+.lesson-steps .meaning-check { background: color-mix(in srgb, var(--yellow) 22%, var(--card)); }
+.lesson-steps .meaning-check p { margin: 0; }
 .lesson-depth { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
 .lesson-depth > div { min-height: 170px; padding: 22px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .lesson-depth p { margin: 0; font-size: 14px; }
 .lesson-depth .practice-card { background: color-mix(in srgb, var(--yellow) 28%, var(--card)); }
+.answer-toggle { margin-top: 18px; padding: 9px 13px; border: 1px solid var(--green); border-radius: 999px; background: transparent; color: var(--green); font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+.answer-toggle:hover { background: var(--green); color: #fff; }
+.answer-toggle:focus-visible { outline: 3px solid color-mix(in srgb, var(--coral) 45%, transparent); outline-offset: 2px; }
+.practice-answer { margin-top: 16px; padding-top: 16px; border-top: 1px solid color-mix(in srgb, var(--green) 25%, transparent); }
+.practice-answer small { color: var(--green); margin-bottom: 8px; }
+.practice-answer p { color: var(--ink); }
 .day-footer { margin-top: 70px; border-top: 1px solid var(--line); padding-top: 30px; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
 .nav-btn { border: 1px solid var(--line); background: var(--card); padding: 14px 18px; cursor: pointer; font-weight: 700; }
 .nav-btn:hover { background: var(--mint); }
@@ -200,6 +220,9 @@ body.dark .complete-btn.done { color:#13201b; }
   .word-card { grid-template-columns: 30px 1fr; }
   .word-card .word-definition { grid-column: 2; }
   .lesson-inner { margin-left: 28px; grid-template-columns: 1fr; }
+  .lesson-breakdown { grid-template-columns: 1fr; }
+  .lesson-steps { grid-template-columns: 1fr; }
+  .lesson-steps > div + div { border-left: 0; border-top: 1px solid var(--line); }
   .lesson-depth { grid-template-columns: 1fr; }
   .day-footer { flex-wrap: wrap; }
   .complete-btn { order: -1; width: 100%; }

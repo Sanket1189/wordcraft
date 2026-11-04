@@ -19,7 +19,7 @@ Infer|reach a conclusion from evidence|From his tone, I inferred that he was ups
 Alleviate|make pain or a problem less severe|A short break may alleviate some stress.`),
     lessons: [
       lesson('“Would” is not always hypothetical','Would can be “will” viewed from a past point in reported speech.','said + would + base verb','He said he would call me.'),
-      lesson('The many jobs of “could”','Could may show past ability, possibility, a polite request, or hypothetical ability.','could + base verb','It could rain tonight. / Could you help me?'),
+      lesson('“Could”: past ability vs possibility','Learn two common meanings of could: an ability someone had in the past, and something that may happen.','could + base verb','I could swim at six. / It could rain tonight.'),
       lesson('“I was wondering…” means now','Past-looking forms often make a present request softer and more polite.','I was wondering if + subject + could','I was wondering if you could send the file.')
     ]
   },
@@ -38,7 +38,7 @@ Exemplify|be a strong example of something|Her actions exemplify good leadership
     lessons: [
       lesson('“Would you mind…?”','Answer “No, not at all” when you are happy to do the request.','would you mind + verb-ing','Would you mind closing the door?'),
       lesson('Have something done','Use the causative when you arrange for another person to perform a service.','have + object + past participle','I had my laptop repaired.'),
-      lesson('Used to vs get used to','Used to is a past habit; be used to means familiar; get used to means become familiar.','used to + verb / used to + noun or -ing','I used to run. I am getting used to waking early.')
+      lesson('Used to vs be used to','Used to describes an old habit that stopped. Be used to describes something that feels normal now.','used to + base verb / be used to + noun or -ing','I used to wake late. Now I am used to waking early.')
     ]
   },
   {
@@ -74,7 +74,7 @@ Considerate|thinking about other people's needs|It was considerate of her to cal
     lessons: [
       lesson('Adjective + preposition','Many feeling adjectives naturally pair with a particular preposition.','adjective + of/about/with','I am nervous about the exam.'),
       lesson('Make vs make someone feel','Use make + object + adjective to describe an emotional effect.','make + person + adjective','That comment made me uncomfortable.'),
-      lesson('Softening descriptions','Words like a bit, rather and can be make criticism sound less harsh.','a bit / rather / can be + adjective','He can be a bit stubborn sometimes.')
+      lesson('“A bit” for softer descriptions','Put a bit before a negative adjective to make criticism sound gentler.','a bit + adjective','He is a bit stubborn sometimes.')
     ]
   },
   {
@@ -127,7 +127,7 @@ Perceive|notice or understand something|People perceive risk differently.
 Reveal|make something previously hidden known|The report revealed several problems.`),
     lessons: [
       lesson('Must have vs might have','Use must have for a strong past deduction; might have for a possibility.','modal + have + past participle','She must have left. / She might have left.'),
-      lesson('Seem, appear and look','Seem and appear describe an impression; look often uses visual evidence.','seem/appear/look + adjective','You look tired. The plan seems risky.'),
+      lesson('Seem vs look','Seem gives a general impression. Look describes an impression based mainly on what you can see.','seem/look + adjective','The plan seems risky. You look tired.'),
       lesson('Indirect questions','After an opening phrase, use statement word order—not question order.','Do you know + question word + subject + verb','Do you know where he is?')
     ]
   },
@@ -146,7 +146,7 @@ Misinterpret|understand something incorrectly|Do not misinterpret my silence.`),
     lessons: [
       lesson('Do you mean…?','Check your understanding before you react or disagree.','Do you mean + clause?','Do you mean we need to start again?'),
       lesson('Actually: correction, not decoration','Actually often corrects an assumption; overusing it can sound confrontational.','Actually, + correction','Actually, the meeting is on Friday.'),
-      lesson('Linking your ideas','Use however for contrast, therefore for result, and moreover for addition.','idea; linker, idea','The plan is costly; however, it may save time.')
+      lesson('However vs therefore','However introduces a contrast. Therefore introduces a result.','sentence; however/therefore, sentence','The plan is costly; however, it may save time.')
     ]
   },
   {
@@ -181,7 +181,7 @@ Compatible|able to exist or work well together|We have compatible values.
 Reciprocal|given or felt equally by both sides|Trust should be reciprocal.`),
     lessons: [
       lesson('Each other vs one another','Both describe a shared action between people; each other is most common.','subject + verb + each other','We support each other.'),
-      lesson('Let, make and allow','Let and make take the base verb; allow takes “to”.','let/make + object + verb; allow + object + to verb','She let me leave. They allowed me to leave.'),
+      lesson('Let vs allow','Both can mean giving permission. Let takes a base verb; allow takes to + verb.','let + person + base verb / allow + person + to verb','She let me leave. She allowed me to leave.'),
       lesson('Setting a boundary','State the behavior, its effect, and what you need—calmly and directly.','When X, I feel Y. I need Z.','When plans change late, I feel stressed. Please tell me earlier.')
     ]
   },
@@ -236,7 +236,7 @@ Refute|prove that a statement is false|The new evidence refutes the rumor.`),
     lessons: [
       lesson('According to','Attribute information to a source without claiming it as your own fact.','according to + source','According to the report, prices fell.'),
       lesson('Passive for unknown actors','Use the passive when the action matters more than who did it.','be + past participle','The documents were released yesterday.'),
-      lesson('Hedging a claim','May, appears to and suggests help you avoid claiming more than the evidence shows.','evidence + suggests that','The data suggests that demand is slowing.')
+      lesson('“Suggests that” for careful claims','Use suggests that when evidence points to an answer but does not prove it completely.','evidence + suggests that + clause','The data suggests that demand is slowing.')
     ]
   },
   {
@@ -252,9 +252,9 @@ Allocate|assign money or resources for a purpose|We allocated more money to repa
 Splurge|spend freely on a treat|I decided to splurge on good headphones.
 Stingy|unwilling to spend or share|Do not be stingy with praise.`),
     lessons: [
-      lesson('Worth, worthy and worthwhile','Worth takes a noun or -ing; worthy often takes “of”; worthwhile describes value.','worth + noun/-ing; worthy of + noun','It is worth reading. The idea is worthy of attention.'),
+      lesson('Worth vs worthwhile','Worth is followed by a noun or -ing action. Worthwhile describes something valuable enough for your time or effort.','worth + noun/-ing / be worthwhile','The book is worth reading. The course was worthwhile.'),
       lesson('Fewer vs less','Use fewer with countable nouns and less with uncountable amounts.','fewer + count noun / less + mass noun','Fewer bills, less stress.'),
-      lesson('Cost, spend and pay','A thing costs; a person spends money on it or pays for it.','thing costs / person spends or pays','The trip cost ₹5,000. I paid for the hotel.')
+      lesson('Cost vs spend','Use cost with the thing or service as the subject. Use spend with the person as the subject.','thing + costs + amount / person + spends + amount + on + thing','The trip cost ₹5,000. I spent ₹5,000 on the trip.')
     ]
   },
   {
@@ -308,7 +308,7 @@ Wellbeing|the state of being healthy and content|Sleep is essential for wellbein
     lessons: [
       lesson('Feel vs feel like','Feel takes an adjective; feel like takes a noun or -ing form.','feel + adjective / feel like + -ing','I feel tired. I feel like resting.'),
       lesson('Too and enough','Too means more than desirable; enough means sufficient.','too + adjective / adjective + enough','I am too tired to drive. I am well enough to work.'),
-      lesson('Advice without commands','Could, might want to and it may help make suggestions gentler.','you might want to + verb','You might want to take a short break.')
+      lesson('“Might want to” for gentle advice','Use might want to when you want to suggest an action without sounding like you are giving an order.','you might want to + base verb','You might want to take a short break.')
     ]
   },
   {
