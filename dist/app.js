@@ -411,7 +411,7 @@ function renderHome() {
   document.querySelector('#browseLibrary').addEventListener('click', () => location.hash = 'categories');
   document.querySelector('#openLibrary').addEventListener('click', () => location.hash = 'categories');
   document.title = 'Wordcraft — 100 Days to Better English';
-  window.scrollTo({top: 0, behavior: 'instant'});
+  window.scrollTo({top: 0, left: 0, behavior: 'instant'});
 }
 
 function renderLibrary() {
@@ -439,7 +439,7 @@ function renderLibrary() {
     location.hash = `category-${button.dataset.category}`;
   }));
   document.title = 'Category Library — Wordcraft';
-  window.scrollTo({top: 0, behavior: 'instant'});
+  window.scrollTo({top: 0, left: 0, behavior: 'instant'});
 }
 
 function renderCategory(slug) {
@@ -474,7 +474,7 @@ function renderCategory(slug) {
   document.querySelector('#prevCategory').addEventListener('click', () => position > 0 && (location.hash = `category-${CATEGORIES[position - 1].slug}`));
   document.querySelector('#nextCategory').addEventListener('click', () => position < CATEGORIES.length - 1 && (location.hash = `category-${CATEGORIES[position + 1].slug}`));
   document.title = `${category.name} — Wordcraft Library`;
-  window.scrollTo({top: 0, behavior: 'instant'});
+  window.scrollTo({top: 0, left: 0, behavior: 'instant'});
 }
 
 function goToDay(dayNumber) {
@@ -571,7 +571,7 @@ function renderDay(dayNumber) {
     event.currentTarget.textContent = completed.has(dayNumber) ? '✓ Day completed' : 'Mark day complete';
   });
   document.title = `Day ${dayNumber}: ${day.theme} — Wordcraft`;
-  window.scrollTo({top: 0, behavior: 'instant'});
+  window.scrollTo({top: 0, left: 0, behavior: 'instant'});
 }
 
 function route() {
