@@ -9,11 +9,17 @@
   <meta http-equiv="refresh" content="0; url=./dist/">
   <script>
     const destination = new URL('./dist/', window.location.href);
-    destination.hash = window.location.hash || '#home';
+    destination.search = window.location.search;
+    const day = window.location.hash.match(/^#day-(\d+)$/);
+    const category = window.location.hash.match(/^#category-(.+)$/);
+    if (day) destination.searchParams.set('day', day[1]);
+    else if (window.location.hash === '#categories') destination.searchParams.set('page', 'categories');
+    else if (category) destination.searchParams.set('category', category[1]);
+    destination.hash = '';
     window.location.replace(destination.href);
   </script>
 </head>
 <body>
-  <p>Opening <a href="./dist/#home">Wordcraft</a>…</p>
+  <p>Opening <a href="./dist/">Wordcraft</a>…</p>
 </body>
 </html>

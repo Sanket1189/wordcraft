@@ -4,6 +4,19 @@ const completed = new Set(JSON.parse(localStorage.getItem('wordcraft-completed')
 const escapeHtml = (value) => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const saveProgress = () => localStorage.setItem('wordcraft-completed', JSON.stringify([...completed]));
 
+function navigateTo(params = {}, replace = false) {
+  const url = new URL(location.href);
+  url.search = '';
+  url.hash = '';
+  Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, value));
+  history[replace ? 'replaceState' : 'pushState']({}, '', `${url.pathname}${url.search}`);
+  route();
+}
+
+const goHome = () => navigateTo();
+const goToLibrary = () => navigateTo({page: 'categories'});
+const goToCategory = (slug) => navigateTo({category: slug});
+
 function buildLessonGuide(item) {
   const title = item.title.toLowerCase();
   const rules = [
@@ -423,8 +436,8 @@ function renderHome() {
     const next = DAYS.findIndex((_, i) => !completed.has(i + 1));
     goToDay(next === -1 ? 1 : next + 1);
   });
-  document.querySelector('#browseLibrary').addEventListener('click', () => location.hash = 'categories');
-  document.querySelector('#openLibrary').addEventListener('click', () => location.hash = 'categories');
+  document.querySelector('#browseLibrary').addEventListener('click', goToLibrary);
+  document.querySelector('#openLibrary').addEventListener('click', goToLibrary);
   document.title = 'Wordcraft — 100 Days to Better English';
   window.scrollTo({top: 0, left: 0, behavior: 'instant'});
 }
@@ -449,9 +462,9 @@ function renderLibrary() {
       </div>
       <div class="category-grid">${cards}</div>
     </section>`;
-  document.querySelector('#backHome').addEventListener('click', () => location.hash = 'home');
+  document.querySelector('#backHome').addEventListener('click', goHome);
   document.querySelectorAll('[data-category]').forEach(button => button.addEventListener('click', () => {
-    location.hash = `category-${button.dataset.category}`;
+    goToCategory(button.dataset.category);
   }));
   document.title = 'Category Library — Wordcraft';
   window.scrollTo({top: 0, left: 0, behavior: 'instant'});
@@ -485,15 +498,15 @@ function renderCategory(slug) {
         <button class="nav-btn" id="nextCategory" ${position === CATEGORIES.length - 1 ? 'disabled' : ''}>Next category →</button>
       </div>
     </section>`;
-  document.querySelector('#backLibrary').addEventListener('click', () => location.hash = 'categories');
-  document.querySelector('#prevCategory').addEventListener('click', () => position > 0 && (location.hash = `category-${CATEGORIES[position - 1].slug}`));
-  document.querySelector('#nextCategory').addEventListener('click', () => position < CATEGORIES.length - 1 && (location.hash = `category-${CATEGORIES[position + 1].slug}`));
+  document.querySelector('#backLibrary').addEventListener('click', goToLibrary);
+  document.querySelector('#prevCategory').addEventListener('click', () => position > 0 && goToCategory(CATEGORIES[position - 1].slug));
+  document.querySelector('#nextCategory').addEventListener('click', () => position < CATEGORIES.length - 1 && goToCategory(CATEGORIES[position + 1].slug));
   document.title = `${category.name} — Wordcraft Library`;
   window.scrollTo({top: 0, left: 0, behavior: 'instant'});
 }
 
 function goToDay(dayNumber) {
-  location.hash = `day-${dayNumber}`;
+  navigateTo({day: dayNumber});
 }
 
 function renderDay(dayNumber) {
@@ -579,7 +592,7 @@ function renderDay(dayNumber) {
         <button class="nav-btn" id="nextDay" ${dayNumber === DAYS.length ? 'disabled' : ''}>Next day →</button>
       </div>
     </section>`;
-  document.querySelector('#backHome').addEventListener('click', () => location.hash = 'home');
+  document.querySelector('#backHome').addEventListener('click', goHome);
   document.querySelectorAll('.lesson-toggle').forEach(button => button.addEventListener('click', () => {
     const card = button.closest('.lesson-card');
     card.classList.toggle('open');
@@ -605,11 +618,19 @@ function renderDay(dayNumber) {
 }
 
 function route() {
-  const match = location.hash.match(/^#day-(\d+)$/);
-  const categoryMatch = location.hash.match(/^#category-(.+)$/);
-  if (match) renderDay(Number(match[1]));
-  else if (location.hash === '#categories') renderLibrary();
-  else if (categoryMatch) renderCategory(categoryMatch[1]);
+  const legacyDay = location.hash.match(/^#day-(\d+)$/);
+  const legacyCategory = location.hash.match(/^#category-(.+)$/);
+  if (legacyDay) return navigateTo({day: legacyDay[1]}, true);
+  if (location.hash === '#categories') return navigateTo({page: 'categories'}, true);
+  if (legacyCategory) return navigateTo({category: legacyCategory[1]}, true);
+  if (location.hash) return navigateTo({}, true);
+
+  const params = new URLSearchParams(location.search);
+  const dayNumber = Number(params.get('day'));
+  const category = params.get('category');
+  if (Number.isInteger(dayNumber) && dayNumber >= 1 && dayNumber <= DAYS.length) renderDay(dayNumber);
+  else if (params.get('page') === 'categories') renderLibrary();
+  else if (category) renderCategory(category);
   else renderHome();
 }
 
@@ -635,14 +656,14 @@ function searchWords(query = '') {
   results.querySelectorAll('[data-day], [data-slug]').forEach(button => button.addEventListener('click', () => {
     dialog.close();
     if (button.dataset.day) goToDay(Number(button.dataset.day));
-    else location.hash = `category-${button.dataset.slug}`;
+    else goToCategory(button.dataset.slug);
   }));
 }
 
 document.querySelector('#searchBtn').addEventListener('click', () => {
   dialog.showModal(); searchWords(input.value); setTimeout(() => input.focus(), 50);
 });
-document.querySelector('#libraryBtn').addEventListener('click', () => location.hash = 'categories');
+document.querySelector('#libraryBtn').addEventListener('click', goToLibrary);
 document.querySelector('#closeSearch').addEventListener('click', () => dialog.close());
 input.addEventListener('input', () => searchWords(input.value));
 dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
@@ -654,5 +675,6 @@ document.querySelector('#themeBtn').addEventListener('click', () => {
   localStorage.setItem('wordcraft-theme', document.body.classList.contains('dark') ? 'dark' : 'light');
 });
 
-window.addEventListener('hashchange', route);
+document.querySelector('.brand').addEventListener('click', event => { event.preventDefault(); goHome(); });
+window.addEventListener('popstate', route);
 route();
