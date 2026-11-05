@@ -121,6 +121,10 @@ function buildLessonGuide(item) {
 function buildLessonBreakdown(item) {
   const title = item.title.toLowerCase();
   const comparisons = [
+    [/would.*hypothetical|reported.*would/, [
+      ['REPORTED SPEECH', 'Would reports an earlier promise or future plan from a past point of view. It is not imaginary.', 'He said he would help me.'],
+      ['HYPOTHETICAL WOULD', 'Would describes an imagined result when it depends on a condition.', 'He would help me if I asked.']
+    ]],
     [/could.*past ability.*possibility/, [
       ['USE 1 · PAST ABILITY', 'Use could for a general skill or ability someone had in the past.', 'When I was seven, I could ride a bicycle.'],
       ['USE 2 · POSSIBILITY', 'Use could when something may happen now or in the future.', 'Take an umbrella. It could rain later.']
@@ -201,45 +205,56 @@ function buildLessonBreakdown(item) {
   return comparisons.find(([pattern]) => pattern.test(title))?.[1] || [];
 }
 
-function explainPatternPart(part) {
-  const text = part.trim();
-  const lower = text.toLowerCase();
-  if (/subject/.test(lower)) return `Choose the subject: the person or thing the sentence is about (${text}).`;
-  if (/base verb|verb$/.test(lower)) return `Use the verb in its basic form, such as go, work, or call (${text}).`;
-  if (/past participle|participle/.test(lower)) return `Use the third verb form, such as done, seen, written, or repaired (${text}).`;
-  if (/verb-ing|-ing|gerund/.test(lower)) return `Use the -ing form of the action, such as working, waiting, or reading (${text}).`;
-  if (/object|person/.test(lower)) return `Add the person or thing affected by the action (${text}).`;
-  if (/adjective/.test(lower)) return `Add a describing word, such as calm, clear, tired, or useful (${text}).`;
-  if (/noun/.test(lower)) return `Add the required person, place, thing, or idea (${text}).`;
-  if (/clause/.test(lower)) return `Add a complete idea with its own subject and verb (${text}).`;
-  if (/time|deadline|end point/.test(lower)) return `Add a clear time so the listener understands when (${text}).`;
-  return `Add the next part of the pattern: ${text}.`;
-}
-
-function buildLessonSteps(item, hasBreakdown) {
-  if (hasBreakdown) return [
-    'Decide which meaning you want before choosing a form.',
-    'Use the matching pattern shown in the two explanation cards.',
-    'Add one real person, time, place, or detail so the sentence sounds natural.'
-  ];
-  const parts = item.pattern.split(/\s*(?:\+|→)\s*/).map(part => part.trim()).filter(Boolean);
-  if (parts.length > 1 && parts.length <= 5) return parts.map(explainPatternPart);
-  return [
-    `Start with the model pattern: ${item.pattern}.`,
-    'Replace the model words with details from your own situation.',
-    'Read the sentence once and check that its meaning matches the lesson.'
-  ];
-}
-
-function buildMeaningCheck(item) {
+function lessonDisplayTitle(item) {
   const title = item.title.toLowerCase();
-  if (/conditional|what if|wish/.test(title)) return 'Ask: Is this situation real, possible, unlikely, or imaginary? Your answer decides which form you need.';
-  if (/past|present|future|used to|been to|gone to|about to/.test(title)) return 'Ask: When does this happen, and is the time finished, continuing, or connected to now?';
-  if (/polite|mind|wondering|boundary|feedback|disagreement|sincere|conversation|assertive/.test(title)) return 'Ask: Is my message both clear and respectful? The listener should understand the request, feeling, or concern.';
-  if (/ vs |either|neither|too and enough|so.*such|although|despite/.test(title)) return 'Ask: Which meaning do I need? Then check that I used the grammar belonging to that side of the comparison.';
-  if (/passive|reported|causative/.test(title)) return 'Ask: Whose viewpoint matters here, and do I want to focus on the person, the words, or the result?';
-  if (/context practice|speaking drill|habit|pausing/.test(title)) return 'Ask: Can I say or recall this without reading? If not, practise once more with a personal example.';
-  return 'Ask: Does my sentence express the lesson’s meaning, follow the pattern, and sound natural in this situation?';
+  if (/would.*hypothetical/.test(title)) return '“Would” in reported speech';
+  if (/could.*past ability.*possibility/.test(title)) return '“Could” for past ability and possibility';
+  if (/i was wondering/.test(title)) return '“I was wondering” for a polite request';
+  return item.title;
+}
+
+function buildLessonSituation(item) {
+  const title = item.title.toLowerCase();
+  if (/would.*hypothetical|reported.*would/.test(title)) return {
+    setup: 'Yesterday, your friend said, “I will call you tomorrow.” Today, you are telling someone about that earlier promise.',
+    note: 'Would is not imaginary here. It is will viewed from a past point.'
+  };
+  if (/ vs |either|neither|although|despite|too and enough|so.*such|fewer|less/.test(title)) return {
+    setup: 'You have two similar forms available, but each one has a different meaning or grammar. First decide what you want to say, then choose the matching form.',
+    note: 'The context tells you which side of the comparison you need.'
+  };
+  if (/mind|wondering|polite|request|soften/.test(title)) return {
+    setup: 'You need to ask for something, but you want the request to sound calm and considerate instead of demanding.',
+    note: 'The meaning stays clear; the wording simply gives the listener more space to respond.'
+  };
+  if (/conditional|what if|wish|hypothetical/.test(title)) return {
+    setup: 'You are talking about a condition, possibility, or imagined situation. The form changes according to how real the situation feels.',
+    note: 'Notice whether the speaker means real, possible, unlikely, or imaginary.'
+  };
+  if (/past|used to|reported|had |have |been to|gone to/.test(title)) return {
+    setup: 'You are looking back at an earlier action, habit, statement, or experience and connecting it to the present conversation.',
+    note: 'The time and the speaker’s viewpoint explain why this form is used.'
+  };
+  if (/future|about to|likely|probability/.test(title)) return {
+    setup: 'You are talking about what you expect, plan, or think may happen after now.',
+    note: 'The form shows whether the future event is planned, expected, immediate, or only possible.'
+  };
+  if (/assertive|boundary|feedback|disagreement|sincere|conversation|pausing/.test(title)) return {
+    setup: 'Imagine this happening in an ordinary conversation. You want to express your point clearly while keeping the tone respectful.',
+    note: 'The sentence works because the message is direct, specific, and considerate.'
+  };
+  if (/context practice/.test(title)) return {
+    setup: 'Imagine a real moment from your day. Connect the new words to a person, place, action, or problem instead of memorising them alone.',
+    note: 'A small realistic scene makes the vocabulary easier to remember and use later.'
+  };
+  if (/speaking drill/.test(title)) return {
+    setup: 'Imagine explaining today’s topic to a friend without reading from the screen. Start slowly and use one complete thought at a time.',
+    note: 'Speaking from memory shows which words you can already use and which ones need another review.'
+  };
+  return {
+    setup: `Imagine that you need to express this idea in a normal conversation: ${item.idea}`,
+    note: `The example follows the form “${item.pattern}” and shows the lesson’s meaning in a complete sentence.`
+  };
 }
 
 function buildPracticeAnswer(item, day) {
@@ -501,33 +516,48 @@ function renderDay(dayNumber) {
   const lessons = day.lessons.map((item, i) => {
     const guide = buildLessonGuide(item);
     const breakdown = buildLessonBreakdown(item);
-    const steps = buildLessonSteps(item, breakdown.length > 0);
-    const meaningCheck = buildMeaningCheck(item);
+    const situation = buildLessonSituation(item);
     const practiceAnswer = buildPracticeAnswer(item, day);
-    const breakdownHtml = breakdown.length ? `<div class="lesson-breakdown">${breakdown.map(([label, explanation, example]) => `
-      <div><small>${escapeHtml(label)}</small><p>${escapeHtml(explanation)}</p><em>“${escapeHtml(example)}”</em></div>`).join('')}</div>` : '';
+    const breakdownHtml = breakdown.length ? `<section class="lesson-compare">
+      <small>COMPARE THE MEANINGS</small>
+      ${breakdown.map(([label, explanation, example]) => `
+        <div class="comparison-point"><h4>${escapeHtml(label)}</h4><p>${escapeHtml(explanation)}</p><blockquote>“${escapeHtml(example)}”</blockquote></div>`).join('')}
+      </section>` : '';
     return `
       <article class="lesson-card ${i === 0 ? 'open' : ''}">
         <button class="lesson-toggle" aria-expanded="${i === 0}">
-          <span class="lesson-index">0${i + 1}</span><h3>${escapeHtml(item.title)}</h3><span class="plus">+</span>
+          <span class="lesson-index">0${i + 1}</span><h3>${escapeHtml(lessonDisplayTitle(item))}</h3><span class="plus">+</span>
         </button>
         <div class="lesson-body"><div class="lesson-inner">
-          <div class="lesson-explanation"><small>HOW IT WORKS</small><p>${escapeHtml(item.idea)}</p><p>${escapeHtml(guide.explanation)}</p></div>
-          <div class="pattern-box"><small>REMEMBER THE PATTERN</small><code>${escapeHtml(item.pattern)}</code><em>“${escapeHtml(item.example)}”</em></div>
+          <section class="lesson-intro">
+            <small>WHAT THIS LESSON IS ABOUT</small>
+            <p class="lesson-lead">${escapeHtml(item.idea)}</p>
+            <p>${escapeHtml(guide.explanation)}</p>
+          </section>
+          <section class="lesson-situation">
+            <small>SEE IT IN A REAL SITUATION</small>
+            <p>${escapeHtml(situation.setup)}</p>
+            <blockquote>“${escapeHtml(item.example)}”</blockquote>
+            <p>${escapeHtml(situation.note)}</p>
+          </section>
+          <section class="lesson-form">
+            <small>THE FORM TO REMEMBER</small>
+            <code>${escapeHtml(item.pattern)}</code>
+          </section>
           ${breakdownHtml}
-          <div class="lesson-steps">
-            <div><small>BUILD IT STEP BY STEP</small><ol>${steps.map(step => `<li>${escapeHtml(step)}</li>`).join('')}</ol></div>
-            <div class="meaning-check"><small>CHECK YOUR MEANING</small><p>${escapeHtml(meaningCheck)}</p></div>
-          </div>
-          <div class="lesson-depth">
-            <div><small>ONE MORE EXAMPLE</small><p>${escapeHtml(guide.extraExample)}</p></div>
-            <div><small>COMMON MISTAKE</small><p>${escapeHtml(guide.mistake)}</p></div>
-            <div class="practice-card">
+          <section class="lesson-more">
+            <small>ONE MORE NATURAL EXAMPLE</small>
+            <p>${escapeHtml(guide.extraExample)}</p>
+          </section>
+          <section class="lesson-reminder">
+            <small>SIMPLE REMINDER</small>
+            <p>${escapeHtml(guide.mistake)}</p>
+          </section>
+          <section class="practice-card">
               <small>TRY IT YOURSELF</small><p>${escapeHtml(guide.practice)}</p>
               <button type="button" class="answer-toggle" aria-expanded="false">Show sample answer</button>
               <div class="practice-answer" hidden><small>SAMPLE ANSWER</small><p>${escapeHtml(practiceAnswer)}</p></div>
-            </div>
-          </div>
+          </section>
         </div></div>
       </article>`;
   }).join('');
