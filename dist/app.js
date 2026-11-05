@@ -4,18 +4,26 @@ const completed = new Set(JSON.parse(localStorage.getItem('wordcraft-completed')
 const escapeHtml = (value) => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const saveProgress = () => localStorage.setItem('wordcraft-completed', JSON.stringify([...completed]));
 
-function navigateTo(params = {}, replace = false) {
-  const url = new URL(location.href);
-  url.search = '';
-  url.hash = '';
-  Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, value));
-  history[replace ? 'replaceState' : 'pushState']({}, '', `${url.pathname}${url.search}`);
+function inferBasePath() {
+  const path = location.pathname;
+  const distIndex = path.indexOf('/dist/');
+  if (distIndex >= 0) return path.slice(0, distIndex + 1);
+  const route = path.match(/(?:day-\d+|categories|category-[^/]+)\/?$/);
+  if (route) return path.slice(0, route.index);
+  return path.endsWith('/') ? path : path.replace(/[^/]*$/, '');
+}
+
+const siteBasePath = inferBasePath();
+
+function navigateTo(pathSegment = '', replace = false) {
+  const cleanRoute = pathSegment ? `${pathSegment.replace(/^\/+|\/+$/g, '')}/` : '';
+  history[replace ? 'replaceState' : 'pushState']({}, '', `${siteBasePath}${cleanRoute}`);
   route();
 }
 
-const goHome = () => navigateTo();
-const goToLibrary = () => navigateTo({page: 'categories'});
-const goToCategory = (slug) => navigateTo({category: slug});
+const goHome = () => navigateTo('');
+const goToLibrary = () => navigateTo('categories');
+const goToCategory = (slug) => navigateTo(`category-${slug}`);
 
 function buildLessonGuide(item) {
   const title = item.title.toLowerCase();
@@ -506,7 +514,7 @@ function renderCategory(slug) {
 }
 
 function goToDay(dayNumber) {
-  navigateTo({day: dayNumber});
+  navigateTo(`day-${dayNumber}`);
 }
 
 function renderDay(dayNumber) {
@@ -620,17 +628,23 @@ function renderDay(dayNumber) {
 function route() {
   const legacyDay = location.hash.match(/^#day-(\d+)$/);
   const legacyCategory = location.hash.match(/^#category-(.+)$/);
-  if (legacyDay) return navigateTo({day: legacyDay[1]}, true);
-  if (location.hash === '#categories') return navigateTo({page: 'categories'}, true);
-  if (legacyCategory) return navigateTo({category: legacyCategory[1]}, true);
-  if (location.hash) return navigateTo({}, true);
+  if (legacyDay) return navigateTo(`day-${legacyDay[1]}`, true);
+  if (location.hash === '#categories') return navigateTo('categories', true);
+  if (legacyCategory) return navigateTo(`category-${legacyCategory[1]}`, true);
+  if (location.hash) return navigateTo('', true);
 
   const params = new URLSearchParams(location.search);
-  const dayNumber = Number(params.get('day'));
-  const category = params.get('category');
-  if (Number.isInteger(dayNumber) && dayNumber >= 1 && dayNumber <= DAYS.length) renderDay(dayNumber);
-  else if (params.get('page') === 'categories') renderLibrary();
-  else if (category) renderCategory(category);
+  if (params.get('day')) return navigateTo(`day-${params.get('day')}`, true);
+  if (params.get('page') === 'categories') return navigateTo('categories', true);
+  if (params.get('category')) return navigateTo(`category-${params.get('category')}`, true);
+  if (/\/dist\/?$/.test(location.pathname)) return navigateTo('', true);
+
+  const routePath = decodeURIComponent(location.pathname.slice(siteBasePath.length)).replace(/^\/+|\/+$/g, '');
+  const dayMatch = routePath.match(/^day-(\d+)$/);
+  const categoryMatch = routePath.match(/^category-(.+)$/);
+  if (dayMatch && Number(dayMatch[1]) >= 1 && Number(dayMatch[1]) <= DAYS.length) renderDay(Number(dayMatch[1]));
+  else if (routePath === 'categories') renderLibrary();
+  else if (categoryMatch) renderCategory(categoryMatch[1]);
   else renderHome();
 }
 

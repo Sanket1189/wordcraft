@@ -1,25 +1,103 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Opening Wordcraft…</title>
-  <meta name="description" content="Wordcraft — 100 days of practical English vocabulary and lessons.">
-  <link rel="icon" href="./dist/favicon.svg" type="image/svg+xml">
-  <meta http-equiv="refresh" content="0; url=./dist/">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Master 1,000 practical English words and 300 useful lessons in 100 days." />
+  <title>Wordcraft — 100 Days to Better English</title>
   <script>
-    const destination = new URL('./dist/', window.location.href);
-    destination.search = window.location.search;
-    const day = window.location.hash.match(/^#day-(\d+)$/);
-    const category = window.location.hash.match(/^#category-(.+)$/);
-    if (day) destination.searchParams.set('day', day[1]);
-    else if (window.location.hash === '#categories') destination.searchParams.set('page', 'categories');
-    else if (category) destination.searchParams.set('category', category[1]);
-    destination.hash = '';
-    window.location.replace(destination.href);
+    const routeNamePattern = /^(?:day-\d+|categories|category-[^/]+)$/;
+    const pathParts = location.pathname.split('/').filter(Boolean);
+    const cleanRouteIndex = pathParts.findIndex(part => routeNamePattern.test(part));
+    const assetBase = cleanRouteIndex >= 0
+      ? `/${pathParts.slice(0, cleanRouteIndex).join('/')}${cleanRouteIndex > 0 ? '/' : ''}`
+      : (location.pathname.endsWith('/') ? location.pathname : location.pathname.replace(/[^/]*$/, ''));
+    document.write(`<base href="${assetBase || '/'}">`);
   </script>
+  <link rel="icon" href="dist/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dist/styles.css?v=20261105-3" />
 </head>
 <body>
-  <p>Opening <a href="./dist/">Wordcraft</a>…</p>
+  <div class="paper-noise"></div>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Wordcraft home"><span class="brand-mark">W</span><span>WORDCRAFT</span></a>
+    <div class="top-actions">
+      <button class="library-pill" id="libraryBtn">Category library</button>
+      <button class="icon-btn" id="searchBtn" aria-label="Search all words"><span>⌕</span></button>
+      <button class="icon-btn" id="themeBtn" aria-label="Toggle dark mode"><span>◐</span></button>
+    </div>
+  </header>
+
+  <main id="app" tabindex="-1"></main>
+
+  <dialog id="searchDialog">
+    <div class="search-head">
+      <div><span class="eyebrow">WORD FINDER</span><h2>Find any word</h2></div>
+      <button class="icon-btn" id="closeSearch" aria-label="Close search">×</button>
+    </div>
+    <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Try ‘articulate’ or ‘confused’…" autocomplete="off" /></label>
+    <div id="searchResults" class="search-results"></div>
+  </dialog>
+
+  <template id="homeTemplate">
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">A 100-DAY ENGLISH PRACTICE</span>
+        <h1>Words that stay.<br><em>English that flows.</em></h1>
+        <p>Build a sharper vocabulary with ten practical words and three bite-sized lessons every day.</p>
+        <div class="hero-actions">
+          <button class="primary-btn" id="startBtn">Begin day one <span>→</span></button>
+          <button class="text-btn" id="browseLibrary">Browse categories</button>
+          <span class="time-note">About 15 minutes a day</span>
+        </div>
+      </div>
+      <div class="hero-card" aria-hidden="true">
+        <span class="card-day">TODAY'S WORD</span>
+        <div class="scribble">say it aloud</div>
+        <h2>articulate</h2>
+        <span class="phonetic">/ɑːˈtɪk.jə.lət/</span>
+        <p>able to express thoughts and ideas clearly</p>
+        <blockquote>“She is articulate when explaining complex ideas.”</blockquote>
+        <div class="card-stamp">01</div>
+      </div>
+    </section>
+    <section class="course-section">
+      <div class="section-heading">
+        <div><span class="eyebrow">YOUR COURSE</span><h2>One hundred days. One stronger voice.</h2></div>
+        <div class="progress-copy"><strong id="progressNumber">0</strong><span>/ 100 days complete</span></div>
+      </div>
+      <div class="progress-track"><span id="progressBar"></span></div>
+      <div class="day-grid" id="dayGrid"></div>
+    </section>
+    <section class="library-strip">
+      <div>
+        <span class="eyebrow">QUICK WORD LIBRARY</span>
+        <h2>Learn by category.</h2>
+        <p>600 practical words across fruits, flowers, utensils, travel, health, clothes, technology, and more. Meanings only—no lessons.</p>
+      </div>
+      <button class="primary-btn" id="openLibrary">Explore 30 categories <span>→</span></button>
+    </section>
+    <section class="manifesto">
+      <span class="big-quote">“</span>
+      <p>One hundred days. One thousand useful words. A more <em>confident</em> you.</p>
+      <span class="small-note">PRACTICAL • NATURAL • MEMORABLE</span>
+    </section>
+  </template>
+
+  <script src="dist/data.js?v=20261105-3"></script>
+  <script src="dist/extra-data.js?v=20261105-3"></script>
+  <script src="dist/category-data.js?v=20261105-3"></script>
+  <script src="dist/app.js?v=20261105-3"></script>
+  <script>
+    const savedRoute = sessionStorage.getItem('wordcraft-clean-route');
+    if (savedRoute) {
+      sessionStorage.removeItem('wordcraft-clean-route');
+      history.replaceState({}, '', savedRoute);
+      route();
+    }
+  </script>
 </body>
 </html>

@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Opening Wordcraft…</title>
+  <script>
+    const routePattern = /^(?:day-\d+|categories|category-[^/]+)$/;
+    const parts = location.pathname.split('/').filter(Boolean);
+    const routeIndex = parts.findIndex(part => routePattern.test(part));
+    const basePath = routeIndex > 0 ? `/${parts.slice(0, routeIndex).join('/')}/` : '/';
+    sessionStorage.setItem('wordcraft-clean-route', `${location.pathname}${location.search}`);
+    location.replace(basePath);
+  </script>
+</head>
+<body>
+  <p>Opening Wordcraft…</p>
+</body>
+</html>

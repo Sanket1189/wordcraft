@@ -5,10 +5,12 @@ A 100-day English vocabulary course with 1,000 unique everyday words and phrases
 ## Run locally
 
 ```powershell
-python -m http.server 4173 --directory dist
+node serve-local.mjs
 ```
 
 Then open `http://127.0.0.1:4173/`.
+
+The local server includes the same clean-route fallback used by GitHub Pages, so URLs such as `/day-1/` also work when refreshed directly.
 
 ## Structure
 
@@ -17,3 +19,5 @@ Then open `http://127.0.0.1:4173/`.
 - `dist/data.js` — Days 1–20
 - `dist/extra-data.js` — Days 21–100 and daily-life simplifications
 - `dist/app.js` — navigation, search, progress, and theme behavior
+- `404.html` — GitHub Pages fallback for clean URLs
+- `serve-local.mjs` — local server with clean-route fallback
