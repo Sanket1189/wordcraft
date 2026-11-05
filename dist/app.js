@@ -427,6 +427,47 @@ function categoryExamples(category, word) {
   return [`We talked about ${word} today.`, `Can you describe ${word} in your own words?`];
 }
 
+function dailyWordFor(date = new Date()) {
+  const pool = DAYS.flatMap((day, dayIndex) => day.words.map((item, wordIndex) => ({day, dayIndex, item, wordIndex})));
+  const indexFor = (value) => {
+    const key = `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()}`;
+    let hash = 2166136261;
+    for (const character of key) {
+      hash ^= character.charCodeAt(0);
+      hash = Math.imul(hash, 16777619);
+    }
+    return (hash >>> 0) % pool.length;
+  };
+
+  let index = indexFor(date);
+  const yesterday = new Date(date);
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (index === indexFor(yesterday)) index = (index + 1) % pool.length;
+  return pool[index];
+}
+
+function updateDailyWordCard() {
+  const wordElement = document.querySelector('#dailyWord');
+  if (!wordElement) return;
+  const picked = dailyWordFor();
+  const examples = courseExamples(picked.item, picked.day, picked.wordIndex);
+  wordElement.textContent = picked.item.word;
+  document.querySelector('#dailyMeaning').textContent = picked.item.meaning;
+  document.querySelector('#dailyExample').textContent = `“${examples[0]}”`;
+  document.querySelector('#dailySource').textContent = `FROM DAY ${String(picked.dayIndex + 1).padStart(2, '0')}`;
+  document.querySelector('#dailyStamp').textContent = String(picked.dayIndex + 1).padStart(2, '0');
+}
+
+function scheduleDailyWordRefresh() {
+  const now = new Date();
+  const nextMidnight = new Date(now);
+  nextMidnight.setHours(24, 0, 0, 0);
+  setTimeout(() => {
+    updateDailyWordCard();
+    scheduleDailyWordRefresh();
+  }, nextMidnight.getTime() - now.getTime() + 1000);
+}
+
 function renderHome() {
   app.innerHTML = '';
   app.append(document.querySelector('#homeTemplate').content.cloneNode(true));
@@ -440,6 +481,7 @@ function renderHome() {
   });
   document.querySelector('#progressNumber').textContent = completed.size;
   document.querySelector('#progressBar').style.width = `${completed.size / DAYS.length * 100}%`;
+  updateDailyWordCard();
   document.querySelector('#startBtn').addEventListener('click', () => {
     const next = DAYS.findIndex((_, i) => !completed.has(i + 1));
     goToDay(next === -1 ? 1 : next + 1);
@@ -692,3 +734,4 @@ document.querySelector('#themeBtn').addEventListener('click', () => {
 document.querySelector('.brand').addEventListener('click', event => { event.preventDefault(); goHome(); });
 window.addEventListener('popstate', route);
 route();
+scheduleDailyWordRefresh();
