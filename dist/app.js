@@ -16,7 +16,7 @@ function inferBasePath() {
 const siteBasePath = inferBasePath();
 
 function navigateTo(pathSegment = '', replace = false) {
-  const cleanRoute = pathSegment ? `${pathSegment.replace(/^\/+|\/+$/g, '')}/` : '';
+  const cleanRoute = pathSegment ? pathSegment.replace(/^\/+|\/+$/g, '') : '';
   history[replace ? 'replaceState' : 'pushState']({}, '', `${siteBasePath}${cleanRoute}`);
   route();
 }
@@ -682,6 +682,7 @@ function route() {
   if (/\/dist\/?$/.test(location.pathname)) return navigateTo('', true);
 
   const routePath = decodeURIComponent(location.pathname.slice(siteBasePath.length)).replace(/^\/+|\/+$/g, '');
+  if (routePath && location.pathname.endsWith('/')) return navigateTo(routePath, true);
   const dayMatch = routePath.match(/^day-(\d+)$/);
   const categoryMatch = routePath.match(/^category-(.+)$/);
   if (dayMatch && Number(dayMatch[1]) >= 1 && Number(dayMatch[1]) <= DAYS.length) renderDay(Number(dayMatch[1]));
